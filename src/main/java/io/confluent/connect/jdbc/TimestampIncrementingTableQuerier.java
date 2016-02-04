@@ -139,9 +139,26 @@ public class TimestampIncrementingTableQuerier extends TableQuerier {
       builder.append(JdbcUtils.quoteString(timestampColumn, quoteString));
       builder.append(" ASC");
     }
+
     String queryString = builder.toString();
     log.debug("{} prepared SQL query: {}", this, queryString);
+
+
+    // HHHAAAAAAAAAAAACK!
+    try {
+      db.setAutoCommit(false);
+    } catch (SQLException e) {
+      log.error("Could not set autocommit false: {}", e);
+      throw new ConnectException(e);
+    }
+
     stmt = db.prepareStatement(queryString);
+    // HHHHAAAAAAAAAACk
+    log.info("setting fetch properties");
+    stmt.setFetchDirection(ResultSet.FETCH_FORWARD);
+    stmt.setFetchSize(50);
+
+
   }
 
   @Override
@@ -157,6 +174,7 @@ public class TimestampIncrementingTableQuerier extends TableQuerier {
       Timestamp ts = new Timestamp(timestampOffset == null ? 0 : timestampOffset);
       stmt.setTimestamp(1, ts, UTC_CALENDAR);
     }
+
     return stmt.executeQuery();
   }
 

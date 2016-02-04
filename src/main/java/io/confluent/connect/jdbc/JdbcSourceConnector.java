@@ -72,6 +72,7 @@ public class JdbcSourceConnector extends SourceConnector {
     log.debug("Trying to connect to {}", dbUrl);
     try {
       db = DriverManager.getConnection(dbUrl);
+
     } catch (SQLException e) {
       log.error("Couldn't open connection to {}: {}", dbUrl, e);
       throw new ConnectException(e);

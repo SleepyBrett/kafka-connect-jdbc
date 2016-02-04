@@ -107,6 +107,11 @@ public class JdbcSourceConnectorConfig extends AbstractConfig {
       "Prefix to prepend to table names to generate the name of the Kafka topic to publish data "
       + "to, or in the case of a custom query, the full name of the topic to publish to.";
 
+  public static final String TABLE_LIMIT_CONFIG = "table.limit";
+  private static final String TABLE_LIMIT_DOC = 
+      "If specified adds a LIMIT onto the query.";
+  public static final int TABLE_LIMIT_DEFAULT = 0;
+
   public static ConfigDef baseConfigDef() {
     return new ConfigDef()
         .define(CONNECTION_URL_CONFIG, Type.STRING, Importance.HIGH, CONNECTION_URL_DOC)
@@ -129,6 +134,7 @@ public class JdbcSourceConnectorConfig extends AbstractConfig {
                 Importance.MEDIUM, TABLE_WHITELIST_DOC)
         .define(TABLE_BLACKLIST_CONFIG, Type.LIST, TABLE_BLACKLIST_DEFAULT,
                 Importance.MEDIUM, TABLE_BLACKLIST_DOC)
+        .define(TABLE_LIMIT_CONFIG, Type.INT, TABLE_LIMIT_DEFAULT, Importance.LOW, TABLE_LIMIT_DOC)
         .define(QUERY_CONFIG, Type.STRING, QUERY_DEFAULT,
                 Importance.MEDIUM, QUERY_DOC)
         .define(TOPIC_PREFIX_CONFIG, Type.STRING,
